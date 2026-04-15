@@ -16,9 +16,10 @@
 .navbar a {
     margin-right: 20px;
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     font-size: 18px;
 }
+
 
 /*active link styleing*/
 .navbar a.active {
@@ -26,10 +27,14 @@
     text-decoration: underline;
 }
 
+body {
+    background-color: #091634;  /* light gray */
+}
+
 /* my title*/
 .title h1 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
     margin-top: 20px;
     margin-bottom: 20px;
 }
