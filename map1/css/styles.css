@@ -27,6 +27,10 @@
     text-decoration: underline;
 }
 
+.marker-cluster-small {
+    background-color: rgba(0, 128, 255, 0.6);
+}
+
 body {
     background-color: #091634;  /* light gray */
 }
