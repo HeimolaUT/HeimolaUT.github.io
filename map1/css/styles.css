@@ -32,7 +32,37 @@
 }
 
 body {
-    background-color: #091634;  /* light gray */
+    background-color: #091634;  /* dark blue */
+    color: #ffffff;
+}
+
+
+/* buttons */
+.controls {
+    margin: 20px 0px;
+    text-align: center;
+}
+
+.controls button {
+    padding: 10px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    background-color: #1e3a5f;
+    color: #ffffff;
+}
+
+.controls button:hover {
+    background-color: #2a4d7a;
+}
+
+
+/*button effect*/
+.controls button:active {
+    transform: scale(0.97);
 }
 
 /* my title*/
