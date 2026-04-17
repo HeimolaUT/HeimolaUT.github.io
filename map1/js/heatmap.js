@@ -22,7 +22,7 @@ function heatDataConvert(feature) {
   ]
 }
 
-addGeoJson('geojson/tartu_city_celltowers_edu.geojson')
+
 // add geoJSON layer
 async function addGeoJson(url) {
   const response = await fetch(url)
