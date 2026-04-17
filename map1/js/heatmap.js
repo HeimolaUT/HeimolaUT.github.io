@@ -18,7 +18,7 @@ function heatDataConvert(feature) {
   return [
     feature.geometry.coordinates[1],
     feature.geometry.coordinates[0],
-    feature.properties.area,
+    Math.min(feature.properties.area / 10, 1)
   ]
 }
 
@@ -28,7 +28,7 @@ async function addGeoJson(url) {
   const response = await fetch(url)
   const data = await response.json()
   const heatData = data.features.map(heatDataConvert)
-  const heatMap = L.heatLayer(heatData, { radius: 10 })
+  const heatMap = L.heatLayer(heatData, { radius: 25, blur: 20 })
   heatMap.addTo(map)
 }
 
