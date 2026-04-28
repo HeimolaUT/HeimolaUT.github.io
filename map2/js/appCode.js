@@ -3,6 +3,9 @@ let map = L.map('map', {
   zoom: 12,
   zoomControl: true // Disable default zoom control
 })
+
+map.createPane('customDistrictsPane')
+map.getPane('customDistrictsPanestyle').zIndex = 390
 //adding zoom buttons
 map.zoomControl.setPosition('topright')
 
@@ -61,7 +64,9 @@ async function loadDistrictsLayer() {
       },
       onEachFeature: function(feature, layer) {
         layer.bindPopup(feature.properties.NIMI || 'District ' + feature.properties.OBJECTID)
-      }
+      },
+    // the custom pane is added below
+    pane: 'customDistrictsPane'
     })
   } catch (error) {
     console.error("Error loading districts data:", error)
@@ -98,7 +103,9 @@ async function loadChoroplethLayer() {
       },
       onEachFeature: function(feature, layer) {
         layer.bindPopup('Value: ' + feature.properties.OBJECTID)
-      }
+      },
+    // the custom pane is added below
+    pane: 'customDistrictsPane'
     })
   } catch (error) {
     console.error("Error loading choropleth data:", error)
@@ -124,6 +131,7 @@ async function loadHeatMapLayer() {
       radius: 20,
       blur: 15,
       maxZoom: 17,
+      pane: 'customHeatPane',
     })
 
   } catch (error) {
@@ -188,6 +196,7 @@ async function initializeLayers() {
   layerControl.addTo(map)
   
   osmLayer.addTo(map)
+  //console.log(map)
 }
 
 // then call the function to execute it
