@@ -85,6 +85,9 @@ function getDistrictColor(id) {
 }
 
 
+
+
+
 // Choropleth layer
 async function loadChoroplethLayer() {
   try {
@@ -113,6 +116,9 @@ async function loadChoroplethLayer() {
 }
 
 
+
+
+
 // Heat Map Layer
 async function loadHeatMapLayer() {
   try {
@@ -131,7 +137,7 @@ async function loadHeatMapLayer() {
       radius: 20,
       blur: 15,
       maxZoom: 17,
-      pane: 'customHeatPane',
+  
     })
 
   } catch (error) {
