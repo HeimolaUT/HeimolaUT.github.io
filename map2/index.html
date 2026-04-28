@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tartu map application</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="css/appStyle.css">
+    <!-- CSS links will go here -->
+  </head>
+  <body>
+    <!-- Map container and controls will go here -->
+    <div class="map-title">Tartu Map Application</div>
+     <div class="controls">
+        <button class="button" onclick="defaultMapSettings()">Default view</button>
+    </div>
+    <div id="map"></div>
+    <!-- JavaScript links will go here -->
+     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-choropleth@1.1.4/dist/choropleth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.min.js"></script>
+
+    <script src="js/appCode.js"></script>
+  </body>
+</html>
