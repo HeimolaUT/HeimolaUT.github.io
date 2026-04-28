@@ -5,7 +5,7 @@ let map = L.map('map', {
 })
 
 map.createPane('customDistrictsPane')
-map.getPane('customDistrictsPane').zIndex = 390
+map.getPane('customDistrictsPane').style.zIndex = 390
 //adding zoom buttons
 map.zoomControl.setPosition('topright')
 
