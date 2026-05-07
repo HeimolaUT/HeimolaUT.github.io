@@ -13,15 +13,28 @@
     <!-- Map container and controls will go here -->
     <div class="map-title">Tartu Map Application</div>
      <div class="controls">
-        <button class="button" onclick="defaultMapSettings()">Default view</button>
+        <button id="applySettingsButton" class="button">Default view</button>
+    </div>
+    <div id="info-box">
+      <div id="info-header">
+        <h4>Query Results</h4>
+        <button id="info-close">x</button>
+      </div>
+      <div id="info-content">
+        Click on the map to get feature info
+      </div>
     </div>
     <div id="map"></div>
     <!-- JavaScript links will go here -->
-     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-choropleth@1.1.4/dist/choropleth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.min.js"></script>
 
-    <script src="js/appCode.js"></script>
+    <script type="module">
+      import {defaultMapSettings} from "./js/appCode.js"
+      document.getElementById("applySettingsButton").addEventListener("click", defaultMapSettings)
+    </script>
   </body>
 </html>

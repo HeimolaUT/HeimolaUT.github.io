@@ -1,8 +1,24 @@
+// a) import all the functions
+import * as turfPractice from "./turfPractice.js"
+import * as layers from "./layers.js"
+
+ // to use the function
+
+// ==== OR ====
+
+// // b) import specific functions
+// import { turfFunctions } from "./turfPractice.js"
+
+// turfFunctions() // to use the function
+
+
+
 let map = L.map('map', {
-  center: [58.373523, 26.716045],
+  center: [58.374, 26.715],
   zoom: 12,
-  zoomControl: true // Disable default zoom control
+  zoomControl: true
 })
+turfPractice.turfFunctions(map) // moved it here because had a before initilation error
 
 map.createPane('customDistrictsPane')
 map.getPane('customDistrictsPane').style.zIndex = 390
@@ -32,6 +48,7 @@ const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
 function defaultMapSettings() {
     map.setView([58.373523, 26.716045], 12)
 }
+
 
 
 const baseLayers = {
@@ -178,6 +195,40 @@ async function loadMarkersLayer() {
 }
 
 
+
+function loadWmsLayers(layersList, overlayLayers, activeWmsLayers) {
+  layersList.forEach(layer => {
+
+    let paneName = `${layer.layers}-pane`
+    map.createPane(paneName)
+    map.getPane(paneName).style.zIndex = layer.zIndex
+
+    let newLayer = L.tileLayer.wms(layer.url, {
+      version: layer.version,
+      layers: layer.layers,
+      format: layer.format,
+      transparent: layer.transparent,
+      pane: paneName,
+    })
+
+
+
+    // add each layer to overlayLayers object to display them in layers list menu
+    overlayLayers[layer.title.en] = newLayer
+    // add each layer to an object of WMS layers
+    activeWmsLayers[layer.layers] = false
+    //console.log(activeWmsLayers)
+  })
+}
+
+let activeWmsLayers = {}
+
+function toggleActiveState(layerId, boolean) {
+  if (typeof(activeWmsLayers[layerId]) === "boolean") {
+    activeWmsLayers[layerId] = boolean
+  }
+}
+
 async function initializeLayers() {
   await Promise.all([
   loadDistrictsLayer(),
@@ -191,8 +242,11 @@ async function initializeLayers() {
     "Heatmap": heatMapLayer, 
     "Markers": markersLayer
   }
+
+
+  loadWmsLayers(layers.wmsLayers, overlayLayers, activeWmsLayers)
   
-  layerControlOptions = {
+  const layerControlOptions = {
     collapsed: false,
     position: 'topleft'
   }
@@ -205,7 +259,144 @@ async function initializeLayers() {
   //console.log(map)
 }
 
+
+
+function buildRequestUrl(e, baseUrl, layerName) {
+  // build a bounding box for the current map view
+  const bounds = map.getBounds()
+  const bbox = [
+    bounds.getWest(),
+    bounds.getSouth(),
+    bounds.getEast(),
+    bounds.getNorth()
+  ].join(',')
+
+  // get size values from map object
+  const size = map.getSize()
+  const sizeX = size.x
+  const sizeY = size.y
+
+  // get x and y points and round them to avoid strange errors
+  const xPoint = Math.floor(e.containerPoint.x)
+  const yPoint = Math.floor(e.containerPoint.y)
+
+  // WMS endpoint and request parameters
+  const wmsUrl = baseUrl
+  const params = new URLSearchParams({
+    service: 'WMS',
+    version: '1.1.1',
+    request: 'GetFeatureInfo',
+    query_layers: layerName,
+    layers: layerName,
+    info_format: 'application/json',
+    x: xPoint,
+    y: yPoint,
+    srs: 'EPSG:4326',
+    width: sizeX,
+    height: sizeY,
+    bbox: `${bbox}`
+  })
+
+  return wmsUrl + params
+}
+
+// Returns the English title of a WMS layer based on its internal layerName
+function getLayerName(layersData, layerName) {
+  const match = layersData.filter(entry => entry.layers === layerName)
+
+  if (match.length === 0) {
+    return layerName // fallback if not found
+  }
+
+  return match[0].title.en
+}
+
+
+
+function fetchWmsData(fullUrl, layerName) {
+  fetch(fullUrl)
+  .then(response => response.json())
+  .then(data => {
+
+    const content = document.getElementById('info-content')
+
+    // get human-friendly title
+    const prettyName = getLayerName(layers.wmsLayers, layerName)
+
+    if (data.features && data.features.length > 0) {
+      const feature = data.features[0]
+      const props = feature.properties
+
+      let html = `<h4>${prettyName}</h4><ul>`
+
+      for (const key in props) {
+        html += `<li><strong>${key}:</strong> ${props[key]}</li>`
+      }
+
+      html += '</ul>'
+
+      content.innerHTML += html
+
+    } else {
+      content.innerHTML += `<em>No features found for ${prettyName}</em><br>`
+    }
+  })
+  .catch(error => {
+    console.error('Request failed:', error)
+  })
+}
+
+
+
+
+
+map.on('overlayadd', (event) => {
+  const layerId = event.layer.options.layers
+  toggleActiveState(layerId, true)
+
+  console.log(activeWmsLayers)
+})
+
+
+map.on('overlayremove', (event) => {
+  const layerId = event.layer.options.layers
+  toggleActiveState(layerId, false)
+
+  console.log(activeWmsLayers)
+})
+
+
+map.on('click', function(event) {
+  const content = document.getElementById('info-content')
+  content.innerHTML = ''   // clear previous query results
+
+  Object.entries(activeWmsLayers).forEach(([key, value]) => {
+    if (value === true) {
+      const url = buildRequestUrl(
+        event,
+        'https://landscape-geoinformatics.ut.ee/geoserver/pa2023/wms?',
+        key
+      )
+      fetchWmsData(url, key)
+      document.getElementById('info-box').style.display = 'block'
+      document.getElementById('info-close').addEventListener('click', () => {
+      document.getElementById('info-box').style.display = 'none'
+    })
+
+    }
+  })
+})
+
+
+// document.getElementById("info-close").addEventListener("click", () => {
+//   document.getElementById("info-box").style.display = "none"
+// })
+
+
+
 // then call the function to execute it
 initializeLayers()
 
+
+export {defaultMapSettings}
 
