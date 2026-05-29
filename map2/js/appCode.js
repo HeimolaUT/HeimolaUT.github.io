@@ -29,27 +29,27 @@ map.zoomControl.setPosition('topright')
 const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: 'OpenStreetMap contributors'
-})
+});
 
 osmLayer.addTo(map)
 
 const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Esri, Maxar, Earthstar Geographics, and the GIS community',
   maxZoom: 19
-})
+});
 
 const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
   attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
-})
+});
 
-const esriDarkGray = L.tileLayer(
-  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+const darkMap = L.tileLayer(
+  'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
   {
-    maxZoom: 16,
-    attribution: 'Esri, HERE, Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors'
+    attribution: '© Stadia Maps © OpenMapTiles © OpenStreetMap contributors',
+    maxZoom: 20
   }
-)
+);
 
 
 
@@ -70,7 +70,7 @@ const baseLayers = {
   "OpenStreetMap": osmLayer,
   "Satellite": satelliteLayer,
   "Topographic": topoLayer,
-  "Night Map": esriDarkGray
+  "Night Map": darkMap
 }
 
 
