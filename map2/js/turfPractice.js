@@ -117,7 +117,7 @@ function turfFunctions(map) {
     // create a turf point
         let turfPoint = turf.point(pointCoords)
     // convert the point to GeoJSON format and add it to the map
-        L.geoJSON(turfPoint).addTo(map)
+        //L.geoJSON(turfPoint).addTo(map)
     })
 
 }

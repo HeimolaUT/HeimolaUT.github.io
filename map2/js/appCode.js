@@ -43,6 +43,21 @@ const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
   attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
 })
 
+const esriDarkGray = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+  {
+    maxZoom: 16,
+    attribution: 'Esri, HERE, Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors'
+  }
+)
+
+
+
+
+
+
+
+
 
 //default map settings
 function defaultMapSettings() {
@@ -54,7 +69,8 @@ function defaultMapSettings() {
 const baseLayers = {
   "OpenStreetMap": osmLayer,
   "Satellite": satelliteLayer,
-  "Topographic": topoLayer
+  "Topographic": topoLayer,
+  "Night Map": esriDarkGray
 }
 
 
@@ -254,7 +270,18 @@ async function initializeLayers() {
   const layerControl = L.control.layers(baseLayers, overlayLayers, layerControlOptions)
   
   layerControl.addTo(map)
-  
+
+  map.on('baselayerchange', function(e) {
+    const body = document.body
+
+    if (e.name === "Night Map") {
+      body.classList.add("dark-map")
+    } else {
+      body.classList.remove("dark-map")
+    }
+  })
+
+
   osmLayer.addTo(map)
   //console.log(map)
 }
